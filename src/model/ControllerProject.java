@@ -1,19 +1,28 @@
 package model;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class ControllerProject {
     private String title;
     private int numberDancer;
     private ArrayList<Formation> listFormation;
+    private ArrayList<JButton> btnFormation;
 
-
-    public ControllerProject(String title, int numberDancer, ArrayList<Formation> listFormation) {
+    public ControllerProject(String title, int numberDancer, ArrayList<Formation> listFormation, ArrayList<JButton> btnFormation) {
         this.title = title;
         this.numberDancer = numberDancer;
         this.listFormation = listFormation;
+        this.btnFormation = btnFormation;
     }
 
+    public ArrayList<JButton> getBtnFormation() {
+        return btnFormation;
+    }
+
+    public void setBtnFormation(ArrayList<JButton> btnFormation) {
+        this.btnFormation = btnFormation;
+    }
     public String getTitle() {
         return title;
     }

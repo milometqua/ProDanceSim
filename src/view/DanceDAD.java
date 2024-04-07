@@ -1,20 +1,22 @@
 
 package view;
 
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Label;
-import java.awt.Panel;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import static java.lang.Integer.parseInt;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import model.ControllerProject;
+import model.Formation;
 import model.Menu;
 /**
  *
@@ -23,18 +25,19 @@ import model.Menu;
 public class DanceDAD extends javax.swing.JFrame {
     private Menu menu;
     private ControllerProject ctp;
+    private ArrayList<Formation> listFormation;
+    private ArrayList<JButton> btnFormation;
     private String title;
+    private String get;
     private int numberDancer = 5;
-    private boolean gridVisible = true;
-    private int newX, newY, x, y;
-    Graphics g;
-    Image image;
+    private int x, y;
+    private JPanel currentFormationPanel;
+    Point originalLocation;
+    Point originalOffset;
+    private JLabel draggLabel;
     public DanceDAD() {
         this.menu = new Menu();
         initComponents();
-        g = board.getGraphics();
-        board.paintComponents(g);
-        image = new ImageIcon("maze.PNG").getImage();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -57,6 +60,7 @@ public class DanceDAD extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         number = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
@@ -66,11 +70,17 @@ public class DanceDAD extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         Edit = new javax.swing.JPanel();
-        board = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        addFormation = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        formationScroll = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
+        stage2 = new view.Stage();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -82,7 +92,7 @@ public class DanceDAD extends javax.swing.JFrame {
         parentPanel.setForeground(new java.awt.Color(255, 153, 153));
         parentPanel.setLayout(new java.awt.CardLayout());
 
-        Menu.setBackground(new java.awt.Color(255, 153, 153));
+        Menu.setBackground(new java.awt.Color(204, 204, 204));
         Menu.setName("Menu"); // NOI18N
 
         javax.swing.GroupLayout MenuLayout = new javax.swing.GroupLayout(Menu);
@@ -93,7 +103,7 @@ public class DanceDAD extends javax.swing.JFrame {
         );
         MenuLayout.setVerticalGroup(
             MenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 530, Short.MAX_VALUE)
+            .addGap(0, 540, Short.MAX_VALUE)
         );
 
         parentPanel.add(Menu, "card2");
@@ -101,7 +111,6 @@ public class DanceDAD extends javax.swing.JFrame {
         New.setBackground(new java.awt.Color(102, 102, 102));
         New.setLayout(new java.awt.CardLayout());
 
-        namechoreo.setBackground(new java.awt.Color(51, 51, 51));
         namechoreo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255, 40));
@@ -184,7 +193,7 @@ public class DanceDAD extends javax.swing.JFrame {
 
         namechoreo.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 130, 330, 280));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\Admin\\Downloads\\pexels-madison-inouye-1831234 (1).jpg")); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/pexels-madison-inouye-1831234 (1).jpg"))); // NOI18N
         jLabel4.setText("jLabel4");
         namechoreo.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 980, 530));
 
@@ -192,6 +201,14 @@ public class DanceDAD extends javax.swing.JFrame {
 
         jPanel8.setBackground(new java.awt.Color(51, 51, 51));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/angle-left.png"))); // NOI18N
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
+        jPanel8.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 40, 40));
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255, 40));
         jPanel9.setForeground(new java.awt.Color(102, 102, 102));
@@ -292,7 +309,7 @@ public class DanceDAD extends javax.swing.JFrame {
 
         jPanel8.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 120, 330, 280));
 
-        jLabel8.setIcon(new javax.swing.ImageIcon("C:\\Users\\Admin\\Downloads\\pexels-madison-inouye-1831234 (1).jpg")); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/pexels-madison-inouye-1831234 (1).jpg"))); // NOI18N
         jLabel8.setText("jLabel4");
         jPanel8.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 980, 530));
 
@@ -308,7 +325,7 @@ public class DanceDAD extends javax.swing.JFrame {
         );
         numberLayout.setVerticalGroup(
             numberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 530, Short.MAX_VALUE)
+            .addGap(0, 540, Short.MAX_VALUE)
             .addGroup(numberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(numberLayout.createSequentialGroup()
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -320,67 +337,142 @@ public class DanceDAD extends javax.swing.JFrame {
         parentPanel.add(New, "card3");
 
         Edit.setBackground(new java.awt.Color(204, 204, 204));
-        Edit.setLayout(new java.awt.BorderLayout());
 
-        board.setBackground(new java.awt.Color(0, 0, 0));
-        board.setPreferredSize(new java.awt.Dimension(500, 300));
-        Edit.add(board, java.awt.BorderLayout.CENTER);
-
+        jPanel1.setBackground(new java.awt.Color(153, 153, 153));
         jPanel1.setPreferredSize(new java.awt.Dimension(100, 507));
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        addFormation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        addFormation.setText("Add Formation");
+        addFormation.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addFormationMouseClicked(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(addFormation, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(addFormation, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addContainerGap(19, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jButton1)
-                .addContainerGap(384, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(289, Short.MAX_VALUE))
         );
 
-        Edit.add(jPanel1, java.awt.BorderLayout.WEST);
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel7.setText("AUDIENCE");
+
+        formationScroll.setLayout(new javax.swing.BoxLayout(formationScroll, javax.swing.BoxLayout.LINE_AXIS));
+        jScrollPane1.setViewportView(formationScroll);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 990, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(98, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(442, 442, 442))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 803, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(89, 89, 89))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        Edit.add(jPanel2, java.awt.BorderLayout.SOUTH);
-
-        jPanel4.setPreferredSize(new java.awt.Dimension(100, 430));
+        jPanel4.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel4.setPreferredSize(new java.awt.Dimension(90, 430));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 90, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 430, Short.MAX_VALUE)
+            .addGap(0, 353, Short.MAX_VALUE)
         );
 
-        Edit.add(jPanel4, java.awt.BorderLayout.EAST);
+        stage2.setLayout(new java.awt.FlowLayout());
+
+        jPanel5.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel5.setPreferredSize(new java.awt.Dimension(40, 50));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel1.setText("BACKSTAGE");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(439, 439, 439)
+                .addComponent(jLabel1)
+                .addContainerGap(446, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout EditLayout = new javax.swing.GroupLayout(Edit);
+        Edit.setLayout(EditLayout);
+        EditLayout.setHorizontalGroup(
+            EditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 990, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(EditLayout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(stage2, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        EditLayout.setVerticalGroup(
+            EditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(EditLayout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(EditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stage2, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         parentPanel.add(Edit, "card4");
 
@@ -390,6 +482,11 @@ public class DanceDAD extends javax.swing.JFrame {
         jMenu1.setText("File");
 
         jMenuItem1.setText("New Project");
+        jMenuItem1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuItem1MouseClicked(evt);
+            }
+        });
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -417,7 +514,7 @@ public class DanceDAD extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(parentPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
+            .addComponent(parentPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -474,8 +571,8 @@ public class DanceDAD extends javax.swing.JFrame {
         New.add(Edit);
         New.repaint();
         New.revalidate();
-        board.setBackground(Color.BLACK);
-        board.revalidate();
+        numberDancer = parseInt(jTextField1.getText());
+        Formation formation = new Formation();
         for(int i=1; i<=this.numberDancer;i++){
             JLabel lb = new JLabel();
             Font font = new Font("Segoe UI", Font.BOLD, 14);
@@ -484,30 +581,28 @@ public class DanceDAD extends javax.swing.JFrame {
             lb.setText(""+i);
             lb.setIcon(new ImageIcon(getClass().getResource("/icon/circle.png")));
             lb.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-            lb.addMouseListener(new MouseAdapter() {
-            @Override
-                    public void mousePressed(MouseEvent e) {
-                            x = e.getXOnScreen();
-                            y = e.getYOnScreen();
-                            g.drawImage(image, 0, 0, board);
-                        }
-                    });
-                    lb.addMouseMotionListener(new MouseMotionAdapter() {
-                        public void mouseDragged(MouseEvent e) {
-                            int newX = e.getXOnScreen() - x + lb.getX();
-                            int newY = e.getYOnScreen() - y + lb.getY();
-                            lb.setLocation(newX, newY);
-                            g.drawImage(image, 0, 0, board);
-                            x = e.getXOnScreen();
-                            y = e.getYOnScreen();
-                        }
-                    });
-            board.add(lb);
-            lb.setVisible(true);
-            board.revalidate();
+            lb.addMouseListener(new DragMouseAdapter(lb));
+            formation.AddDancer(lb);
+            stage2.add(lb);
         }
-        //New.add(board);
-        
+        formation.showFormation();
+        listFormation = new ArrayList<Formation>();
+        listFormation.add(formation);
+        btnFormation = new ArrayList<JButton>();
+        JButton button1 = new JButton("Formation 1");
+        get = "Formation 1";
+        button1.addActionListener((ActionEvent e) -> {
+            get = e.getActionCommand();
+            for(Formation fm : listFormation){
+                if(fm!=formation)
+                    fm.hideFormation();
+            }
+            formation.showFormation();
+        });
+        btnFormation.add(button1);
+        button1.setVisible(true);
+        formationScroll.add(button1);
+        ctp = new ControllerProject(title, numberDancer, listFormation, btnFormation);
     }//GEN-LAST:event_Next2MouseClicked
 
     private void minusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minusMouseClicked
@@ -523,18 +618,6 @@ public class DanceDAD extends javax.swing.JFrame {
         jTextField1.setText(this.numberDancer + "");
 
     }//GEN-LAST:event_plusMouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        if(gridVisible){
-            drawGrid(g);
-            
-        }
-        else{
-            gridVisible = !gridVisible;
-            board.repaint();
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
@@ -553,25 +636,96 @@ public class DanceDAD extends javax.swing.JFrame {
         parentPanel.revalidate();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void drawGrid(Graphics g){
-        g.setColor(Color.DARK_GRAY);
-        int cellSize = 20; // Size of each grid cell
-        int rows = board.getHeight() / cellSize;
-        int cols = board.getWidth() / cellSize;
+    private void addFormationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addFormationMouseClicked
 
-        // Draw horizontal lines
-        for (int i = 0; i < rows + 1; i++) {
-            g.drawLine(0, i * cellSize, board.getWidth(), i * cellSize);
-        }
+        addFormation();
+    }//GEN-LAST:event_addFormationMouseClicked
 
-        // Draw vertical lines
-        for (int i = 0; i < cols + 1 ; i++) {
-            g.drawLine(i * cellSize, 0, i * cellSize, board.getHeight());
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        // TODO add your handling code here:
+        New.removeAll();
+        New.add(namechoreo);
+        New.repaint();
+        New.revalidate();
+    }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jMenuItem1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem1MouseClicked
+        // TODO add your handling code here:
+        New.removeAll();
+        New.add(namechoreo);
+        New.repaint();
+        New.revalidate();
+    }//GEN-LAST:event_jMenuItem1MouseClicked
+
+    private class DragMouseAdapter extends MouseAdapter {
+        private JLabel label;
+        private int x;
+        private int y;
+
+        public DragMouseAdapter(JLabel label) {
+            this.label = label;
+            label.addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    int newX = e.getXOnScreen() - x + label.getX();
+                    int newY = e.getYOnScreen() - y + label.getY();
+                    label.setLocation(newX, newY);
+                    x = e.getXOnScreen();
+                    y = e.getYOnScreen();
+                }
+            });
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    x = e.getXOnScreen();
+                    y = e.getYOnScreen();
+                }
+            });
         }
     }
-    /**
-     * @param args the command line arguments
-     */
+    private void addFormation() {
+        Formation formation1 = new Formation();
+        Formation formationm = listFormation.get(listFormation.size()-1);
+        for (int i=1; i<=this.numberDancer;i++) {
+            JLabel lb1 = formationm.getDancers(i-1);
+            JLabel lb = new JLabel();
+            Font font = new Font("Segoe UI", Font.BOLD, 14);
+            lb.setFont(font);
+            lb.setForeground(Color.WHITE);
+            lb.setText(""+i);
+            lb.setIcon(new ImageIcon(getClass().getResource("/icon/circle.png")));
+            lb.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            lb.setLocation(lb1.getX(), lb1.getY());
+            stage2.add(lb);
+            lb.addMouseListener(new DragMouseAdapter(lb));
+            formation1.AddDancer(lb);
+        }
+        final int so = listFormation.size()+1;
+        listFormation.add(formation1);
+        JButton btn = new JButton("Formation"+so);
+        btn.addActionListener(new ActionListener() {
+        @Override
+            public void actionPerformed(ActionEvent e) {
+                /*String[] parts = get.split(" ");
+                int formationNumber = Integer.parseInt(parts[1]);
+                Formation formationn = listFormation.get(formationNumber-1);
+                formationn.saveFormation();*/
+                get = e.getActionCommand();
+                for(int i=0; i< listFormation.size();i++){
+                    if(i!=so-2){
+                        listFormation.get(i).hideFormation();
+                    }
+                }
+                listFormation.get(so-2).showFormation();
+            }
+        });
+        btnFormation.add(btn);
+        btn.setVisible(true);
+        formationScroll.add(btn);
+        stage2.revalidate();
+
+    }
+
     public static void main(String args[]) {
 
         /* Set the Nimbus look and feel */
@@ -608,12 +762,15 @@ public class DanceDAD extends javax.swing.JFrame {
     private javax.swing.JPanel Menu;
     private javax.swing.JPanel New;
     private javax.swing.JLabel Next2;
-    private javax.swing.JPanel board;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel addFormation;
+    private javax.swing.JPanel formationScroll;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
@@ -624,9 +781,12 @@ public class DanceDAD extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel minus;
     private javax.swing.JTextField name;
@@ -634,5 +794,6 @@ public class DanceDAD extends javax.swing.JFrame {
     private javax.swing.JPanel number;
     private javax.swing.JPanel parentPanel;
     private javax.swing.JLabel plus;
+    private view.Stage stage2;
     // End of variables declaration//GEN-END:variables
 }
