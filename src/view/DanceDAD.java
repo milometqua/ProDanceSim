@@ -696,6 +696,8 @@ public class DanceDAD extends javax.swing.JFrame {
             lb.setIcon(new ImageIcon(getClass().getResource("/icon/circle.png")));
             lb.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
             lb.setLocation(lb1.getX(), lb1.getY());
+            javax.swing.GroupLayout stage2Layout = new javax.swing.GroupLayout(stage2);
+            stage2.setLayout(stage2Layout);
             stage2.add(lb);
             lb.addMouseListener(new DragMouseAdapter(lb));
             formation1.AddDancer(lb);
@@ -706,17 +708,7 @@ public class DanceDAD extends javax.swing.JFrame {
         btn.addActionListener(new ActionListener() {
         @Override
             public void actionPerformed(ActionEvent e) {
-                /*String[] parts = get.split(" ");
-                int formationNumber = Integer.parseInt(parts[1]);
-                Formation formationn = listFormation.get(formationNumber-1);
-                formationn.saveFormation();*/
-                get = e.getActionCommand();
-                for(int i=0; i< listFormation.size();i++){
-                    if(i!=so-2){
-                        listFormation.get(i).hideFormation();
-                    }
-                }
-                listFormation.get(so-2).showFormation();
+                showFormation(btn);
             }
         });
         btnFormation.add(btn);
@@ -724,6 +716,22 @@ public class DanceDAD extends javax.swing.JFrame {
         formationScroll.add(btn);
         stage2.revalidate();
 
+    }
+    private void showFormation(JButton btn){
+        String btn1 = btn.getText();
+        System.out.println(btn1);
+        try{
+           int num = Integer.parseInt(btn1.substring(10));
+            listFormation.get(num-1).showFormation();
+            for(int i=0;i<listFormation.size();i++){
+                if(i!=num-1){
+                    listFormation.get(i).hideFormation();
+                }
+            } 
+        }
+        catch(Exception ex){
+            System.out.println(ex);
+        }
     }
 
     public static void main(String args[]) {
