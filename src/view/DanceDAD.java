@@ -27,8 +27,11 @@ public class DanceDAD extends javax.swing.JFrame {
     private ControllerProject ctp;
     private ArrayList<Formation> listFormation;
     private ArrayList<JButton> btnFormation;
+    private ArrayList<JLabel> dancer;
+    private ArrayList<JLabel> dancerfn = new ArrayList<JLabel>();
+    private Formation pdancer;
     private String title;
-    private String get;
+    private int get;
     private int numberDancer = 5;
     private int x, y;
     private JPanel currentFormationPanel;
@@ -99,11 +102,11 @@ public class DanceDAD extends javax.swing.JFrame {
         Menu.setLayout(MenuLayout);
         MenuLayout.setHorizontalGroup(
             MenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 990, Short.MAX_VALUE)
+            .addGap(0, 981, Short.MAX_VALUE)
         );
         MenuLayout.setVerticalGroup(
             MenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGap(0, 545, Short.MAX_VALUE)
         );
 
         parentPanel.add(Menu, "card2");
@@ -317,7 +320,7 @@ public class DanceDAD extends javax.swing.JFrame {
         number.setLayout(numberLayout);
         numberLayout.setHorizontalGroup(
             numberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 990, Short.MAX_VALUE)
+            .addGap(0, 981, Short.MAX_VALUE)
             .addGroup(numberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(numberLayout.createSequentialGroup()
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -325,7 +328,7 @@ public class DanceDAD extends javax.swing.JFrame {
         );
         numberLayout.setVerticalGroup(
             numberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGap(0, 530, Short.MAX_VALUE)
             .addGroup(numberLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(numberLayout.createSequentialGroup()
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -337,6 +340,7 @@ public class DanceDAD extends javax.swing.JFrame {
         parentPanel.add(New, "card3");
 
         Edit.setBackground(new java.awt.Color(204, 204, 204));
+        Edit.setLayout(new java.awt.BorderLayout());
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
         jPanel1.setPreferredSize(new java.awt.Dimension(100, 507));
@@ -374,8 +378,10 @@ public class DanceDAD extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(289, Short.MAX_VALUE))
+                .addContainerGap(443, Short.MAX_VALUE))
         );
+
+        Edit.add(jPanel1, java.awt.BorderLayout.WEST);
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
@@ -391,7 +397,7 @@ public class DanceDAD extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(98, Short.MAX_VALUE)
+                .addContainerGap(89, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel7)
@@ -410,6 +416,8 @@ public class DanceDAD extends javax.swing.JFrame {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
+        Edit.add(jPanel2, java.awt.BorderLayout.SOUTH);
+
         jPanel4.setBackground(new java.awt.Color(153, 153, 153));
         jPanel4.setPreferredSize(new java.awt.Dimension(90, 430));
 
@@ -421,10 +429,14 @@ public class DanceDAD extends javax.swing.JFrame {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 353, Short.MAX_VALUE)
+            .addGap(0, 507, Short.MAX_VALUE)
         );
 
+        Edit.add(jPanel4, java.awt.BorderLayout.EAST);
+
+        stage2.setPreferredSize(new java.awt.Dimension(790, 353));
         stage2.setLayout(new java.awt.FlowLayout());
+        Edit.add(stage2, java.awt.BorderLayout.CENTER);
 
         jPanel5.setBackground(new java.awt.Color(153, 153, 153));
         jPanel5.setPreferredSize(new java.awt.Dimension(40, 50));
@@ -440,7 +452,7 @@ public class DanceDAD extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(439, 439, 439)
                 .addComponent(jLabel1)
-                .addContainerGap(446, Short.MAX_VALUE))
+                .addContainerGap(437, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -450,29 +462,7 @@ public class DanceDAD extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout EditLayout = new javax.swing.GroupLayout(Edit);
-        Edit.setLayout(EditLayout);
-        EditLayout.setHorizontalGroup(
-            EditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 990, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(EditLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(stage2, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        EditLayout.setVerticalGroup(
-            EditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(EditLayout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(EditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(stage2, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        Edit.add(jPanel5, java.awt.BorderLayout.PAGE_START);
 
         parentPanel.add(Edit, "card4");
 
@@ -514,7 +504,7 @@ public class DanceDAD extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(parentPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(parentPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
         );
 
         pack();
@@ -572,8 +562,9 @@ public class DanceDAD extends javax.swing.JFrame {
         New.repaint();
         New.revalidate();
         numberDancer = parseInt(jTextField1.getText());
-        Formation formation = new Formation();
-        for(int i=1; i<=this.numberDancer;i++){
+        dancer = new ArrayList<JLabel>();
+        pdancer = new Formation();
+        for(int i=1; i<=numberDancer;i++){
             JLabel lb = new JLabel();
             Font font = new Font("Segoe UI", Font.BOLD, 14);
             lb.setFont(font);
@@ -581,23 +572,25 @@ public class DanceDAD extends javax.swing.JFrame {
             lb.setText(""+i);
             lb.setIcon(new ImageIcon(getClass().getResource("/icon/circle.png")));
             lb.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-            lb.addMouseListener(new DragMouseAdapter(lb));
-            formation.AddDancer(lb);
+            lb.addMouseListener(new DragMouseAdapter(lb, i-1));
+            lb.setVisible(true);
+            dancer.add(lb);
             stage2.add(lb);
+            Point lbb = new Point();
+            lbb.x = lb.getX();
+            lbb.y = lb.getY();
+            pdancer.AddDancer(lbb);
         }
-        formation.showFormation();
+        //formation.showFormation();
         listFormation = new ArrayList<Formation>();
-        listFormation.add(formation);
+        listFormation.add(pdancer);
         btnFormation = new ArrayList<JButton>();
         JButton button1 = new JButton("Formation 1");
-        get = "Formation 1";
         button1.addActionListener((ActionEvent e) -> {
-            get = e.getActionCommand();
-            for(Formation fm : listFormation){
-                if(fm!=formation)
-                    fm.hideFormation();
+            get=0;
+            for(int i=0; i<numberDancer; i++){
+                dancer.get(i).setLocation(listFormation.get(0).getPoint(i).x, listFormation.get(0).getPoint(i).y);
             }
-            formation.showFormation();
         });
         btnFormation.add(button1);
         button1.setVisible(true);
@@ -662,7 +655,7 @@ public class DanceDAD extends javax.swing.JFrame {
         private int x;
         private int y;
 
-        public DragMouseAdapter(JLabel label) {
+        public DragMouseAdapter(JLabel label, int n) {
             this.label = label;
             label.addMouseMotionListener(new MouseMotionAdapter() {
                 @Override
@@ -672,6 +665,8 @@ public class DanceDAD extends javax.swing.JFrame {
                     label.setLocation(newX, newY);
                     x = e.getXOnScreen();
                     y = e.getYOnScreen();
+                    Point p = new Point(newX, newY);
+                    listFormation.get(get).updatePoint(n, p);
                 }
             });
             label.addMouseListener(new MouseAdapter() {
@@ -684,10 +679,10 @@ public class DanceDAD extends javax.swing.JFrame {
         }
     }
     private void addFormation() {
-        Formation formation1 = new Formation();
-        Formation formationm = listFormation.get(listFormation.size()-1);
+        Formation formation1 = listFormation.get(listFormation.size()-1);
+        final int so = listFormation.size()+1;
         for (int i=1; i<=this.numberDancer;i++) {
-            JLabel lb1 = formationm.getDancers(i-1);
+            JLabel lb1 = dancer.get(i-1);
             JLabel lb = new JLabel();
             Font font = new Font("Segoe UI", Font.BOLD, 14);
             lb.setFont(font);
@@ -699,16 +694,16 @@ public class DanceDAD extends javax.swing.JFrame {
             javax.swing.GroupLayout stage2Layout = new javax.swing.GroupLayout(stage2);
             stage2.setLayout(stage2Layout);
             stage2.add(lb);
-            lb.addMouseListener(new DragMouseAdapter(lb));
-            formation1.AddDancer(lb);
+            lb.addMouseListener(new DragMouseAdapter(lb, i-1));
+            dancerfn.add(lb);
         }
-        final int so = listFormation.size()+1;
         listFormation.add(formation1);
         JButton btn = new JButton("Formation"+so);
         btn.addActionListener(new ActionListener() {
         @Override
             public void actionPerformed(ActionEvent e) {
-                showFormation(btn);
+                get = so-1;
+                showFormation(so-1);
             }
         });
         btnFormation.add(btn);
@@ -717,20 +712,9 @@ public class DanceDAD extends javax.swing.JFrame {
         stage2.revalidate();
 
     }
-    private void showFormation(JButton btn){
-        String btn1 = btn.getText();
-        System.out.println(btn1);
-        try{
-           int num = Integer.parseInt(btn1.substring(10));
-            listFormation.get(num-1).showFormation();
-            for(int i=0;i<listFormation.size();i++){
-                if(i!=num-1){
-                    listFormation.get(i).hideFormation();
-                }
-            } 
-        }
-        catch(Exception ex){
-            System.out.println(ex);
+    private void showFormation(int n){
+        for(int i=0; i<numberDancer; i++){
+            dancerfn.get(i).setLocation(listFormation.get(n).getPoint(i).x, listFormation.get(n).getPoint(i).y);
         }
     }
 
