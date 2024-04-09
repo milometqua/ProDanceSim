@@ -6,7 +6,7 @@
 * Ứng dụng giúp vẽ đội hình và chỉnh sửa một cách dễ dàng hơn
 
 ## Authors
-* @milometqua
+* [@milometqua](https://github.com/milometqua)
 ## Demo
 * Link video: https://www.youtube.com/watch?v=K-GWFRMAegc
 
